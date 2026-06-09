@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -12,21 +12,956 @@
   <link rel="icon" href="icon.svg" />
   <link rel="apple-touch-icon" href="icon.svg" />
   <style>
-    :root{--bg:#000;--fg:#fff;--muted:#aaa;--line:#333;--input:#000;--button:#fff;--button-text:#000}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{min-height:100vh;padding:env(safe-area-inset-top) 16px calc(24px + env(safe-area-inset-bottom))}.app{max-width:520px;margin:0 auto}header{padding:24px 0 16px;border-bottom:1px solid var(--line)}h1{margin:0;font-size:28px;letter-spacing:-.04em;line-height:1}.sub{margin-top:8px;color:var(--muted);font-size:14px}.summary{padding:22px 0;border-bottom:1px solid var(--line)}.label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.12em}.spent{margin-top:8px;font-size:48px;font-weight:800;letter-spacing:-.06em;line-height:1}.left{margin-top:10px;color:var(--muted);font-size:16px}.bar{margin-top:18px;height:12px;border:1px solid var(--fg);background:var(--bg)}.bar>div{height:100%;background:var(--fg);width:0%;transition:width .2s ease}.over{color:var(--fg);font-weight:700}section{padding:18px 0;border-bottom:1px solid var(--line)}.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}input,button{width:100%;border-radius:0;border:1px solid var(--fg);background:var(--input);color:var(--fg);padding:14px 12px;font:inherit;outline:none}input::placeholder{color:#777}button{background:var(--button);color:var(--button-text);font-weight:800;cursor:pointer}button.secondary,button.danger{background:var(--bg);color:var(--fg)}button:active{transform:translateY(1px)}.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.quick button{padding:12px 6px;background:var(--bg);color:var(--fg)}.settings-grid{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.small{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.4}ul{list-style:none;padding:0;margin:12px 0 0}li{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}.item-title{font-weight:700}.item-meta{color:var(--muted);font-size:12px;margin-top:2px}.amount{font-weight:800;white-space:nowrap}.delete{width:42px;height:42px;padding:0;background:var(--bg);color:var(--fg)}.empty{color:var(--muted);padding:18px 0 4px}.footer-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.install{display:none;margin-top:12px}.install.show{display:block}.tiny{font-size:11px;color:#777;line-height:1.4}@media(max-width:360px){.spent{font-size:40px}.quick{grid-template-columns:repeat(2,1fr)}}
+    :root {
+      --bg: #000;
+      --fg: #fff;
+      --muted: #a5a5a5;
+      --soft: #737373;
+      --line: #303030;
+      --surface: #0b0b0b;
+      --input: #000;
+      --button: #fff;
+      --button-text: #000;
+      --good: #7ee787;
+      --bad: #ff8585;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: env(safe-area-inset-top) 16px calc(24px + env(safe-area-inset-bottom));
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .app {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 24px 0 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0;
+      line-height: 1;
+    }
+
+    .sub {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 14px 0 0;
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--muted);
+      padding: 11px 8px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      border-color: var(--fg);
+      background: var(--fg);
+      color: var(--bg);
+    }
+
+    .view[hidden] {
+      display: none;
+    }
+
+    .summary {
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    .spent {
+      margin-top: 8px;
+      font-size: 48px;
+      font-weight: 850;
+      letter-spacing: 0;
+      line-height: 1;
+    }
+
+    .left {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .good {
+      color: var(--good);
+      font-weight: 850;
+    }
+
+    .bad {
+      color: var(--bad);
+      font-weight: 850;
+    }
+
+    .bar {
+      margin-top: 18px;
+      height: 12px;
+      border: 1px solid var(--fg);
+      background: var(--bg);
+    }
+
+    .bar > div {
+      height: 100%;
+      width: 0%;
+      background: var(--fg);
+      transition: width .2s ease;
+    }
+
+    section {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .row > * {
+      flex: 1;
+    }
+
+    input,
+    button {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid var(--fg);
+      border-radius: 8px;
+      background: var(--input);
+      color: var(--fg);
+      padding: 13px 12px;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #777;
+    }
+
+    button {
+      background: var(--button);
+      color: var(--button-text);
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    button.secondary,
+    button.danger {
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    button.danger {
+      border-color: var(--bad);
+      color: var(--bad);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .quick {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .quick button {
+      padding: 12px 6px;
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .small {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    ul {
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .item-title {
+      font-weight: 750;
+      overflow-wrap: anywhere;
+    }
+
+    .item-meta {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .amount {
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .delete {
+      width: 42px;
+      height: 42px;
+      min-height: 42px;
+      padding: 0;
+      border-color: var(--line);
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    .empty {
+      color: var(--muted);
+      padding: 18px 0 4px;
+    }
+
+    .footer-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .install {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .install.show {
+      display: block;
+    }
+
+    .tiny {
+      color: #777;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .history-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--surface);
+    }
+
+    .stat-value {
+      margin-top: 8px;
+      font-size: 24px;
+      font-weight: 850;
+      line-height: 1.1;
+    }
+
+    .month-card {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .month-toggle {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--fg);
+      font-weight: 400;
+      text-align: left;
+    }
+
+    .month-title {
+      font-size: 18px;
+      font-weight: 850;
+    }
+
+    .month-delta {
+      text-align: right;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .month-delta span,
+    .week-margin span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .month-delta strong,
+    .week-margin strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 18px;
+      font-weight: 850;
+    }
+
+    .month-icon {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-weight: 850;
+    }
+
+    .month-meta {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .month-weeks[hidden] {
+      display: none;
+    }
+
+    .week-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 12px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .week-row strong {
+      color: var(--fg);
+      font-weight: 750;
+    }
+
+    .week-margin {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 380px) {
+      body {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .spent {
+        font-size: 40px;
+      }
+
+      .quick,
+      .history-top {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .row,
+      .settings-grid {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="app">
-    <header><h1>Weekly Budget</h1><div class="sub" id="weekRange">Diese Woche</div><button id="installBtn" class="install">App installieren</button></header>
+    <header>
+      <h1>Weekly Budget</h1>
+      <div class="sub" id="weekRange">This week</div>
+      <button id="installBtn" class="install">Install app</button>
+      <nav class="tabs" aria-label="Budget views">
+        <button class="tab active" type="button" data-view="weekView">Week</button>
+        <button class="tab" type="button" data-view="historyView">History</button>
+        <button class="tab" type="button" data-view="settingsView">Settings</button>
+      </nav>
+    </header>
+
     <main>
-      <div class="summary"><div class="label">Ausgegeben</div><div class="spent" id="spent">0,00 €</div><div class="left" id="left">Limit: 150,00 €</div><div class="bar"><div id="barFill"></div></div></div>
-      <section><div class="label">Neue Ausgabe</div><div class="row" style="margin-top:10px"><input id="amount" inputmode="decimal" autocomplete="off" placeholder="Betrag z.B. 7,50"/><button id="addBtn">Add</button></div><input id="note" autocomplete="off" placeholder="Optional: Mittagessen, Billa, Kaffee..." style="margin-top:10px"/><div class="quick"><button class="quickBtn" data-val="5">+5</button><button class="quickBtn" data-val="10">+10</button><button class="quickBtn" data-val="15">+15</button><button class="quickBtn" data-val="20">+20</button></div></section>
-      <section><div class="label">Einstellungen</div><div class="settings-grid" style="margin-top:10px"><input id="limit" inputmode="decimal" autocomplete="off" placeholder="Wochenlimit"/><button id="saveLimitBtn">Save</button></div><div class="small">Automatischer Wochen-Reset jeden Montag. Alte Wochen werden lokal gespeichert.</div></section>
-      <section><div class="label">Diese Woche</div><ul id="list"></ul><div id="empty" class="empty">Noch keine Ausgaben diese Woche.</div><div class="footer-actions"><button id="undoBtn" class="secondary">Undo</button><button id="resetBtn" class="danger">Woche leeren</button></div><p class="tiny">Daten bleiben nur auf deinem Gerät im Browser/App-Speicher.</p></section>
+      <div id="weekView" class="view">
+        <div class="summary">
+          <div class="label">Spent this week</div>
+          <div class="spent" id="spent">EUR 0.00</div>
+          <div class="left" id="left">Limit: EUR 150.00</div>
+          <div class="bar" aria-hidden="true"><div id="barFill"></div></div>
+        </div>
+
+        <section>
+          <div class="label">New expense</div>
+          <div class="row" style="margin-top:10px">
+            <input id="amount" inputmode="decimal" autocomplete="off" placeholder="Amount e.g. 7.50" />
+            <button id="addBtn" type="button">Add</button>
+          </div>
+          <input id="note" autocomplete="off" placeholder="Optional: lunch, groceries, coffee..." style="margin-top:10px" />
+          <div class="quick">
+            <button class="quickBtn" type="button" data-val="5">+5</button>
+            <button class="quickBtn" type="button" data-val="10">+10</button>
+            <button class="quickBtn" type="button" data-val="15">+15</button>
+            <button class="quickBtn" type="button" data-val="20">+20</button>
+          </div>
+        </section>
+
+        <section>
+          <div class="label">This week</div>
+          <ul id="list"></ul>
+          <div id="empty" class="empty">No expenses this week.</div>
+          <div class="footer-actions">
+            <button id="undoBtn" type="button" class="secondary">Undo</button>
+            <button id="resetBtn" type="button" class="danger">Clear week</button>
+          </div>
+        </section>
+      </div>
+
+      <div id="historyView" class="view" hidden>
+        <div class="history-top">
+          <div class="stat">
+            <div class="label">Total saved</div>
+            <div class="stat-value" id="historySaved">EUR 0.00</div>
+          </div>
+          <div class="stat">
+            <div class="label">Total over</div>
+            <div class="stat-value" id="historyOver">EUR 0.00</div>
+          </div>
+        </div>
+        <div id="monthList"></div>
+        <div id="historyEmpty" class="empty">No history yet.</div>
+      </div>
+
+      <div id="settingsView" class="view" hidden>
+        <section>
+          <div class="label">Weekly limit</div>
+          <div class="settings-grid">
+            <input id="limit" inputmode="decimal" autocomplete="off" placeholder="Weekly limit" />
+            <button id="saveLimitBtn" type="button">Save</button>
+          </div>
+          <div class="small" id="settingsSaved">Current limit: EUR 150.00</div>
+        </section>
+
+        <section>
+          <div class="label">Storage</div>
+          <p class="tiny">Data stays on this device in browser/app storage.</p>
+        </section>
+      </div>
     </main>
   </div>
+
 <script>
-const STORAGE_KEY='weekly-budget-v1',DEFAULT_LIMIT=150;let deferredPrompt=null,lastDeleted=null;const $=id=>document.getElementById(id);const fmt=new Intl.NumberFormat('de-AT',{style:'currency',currency:'EUR'});const dateFmt=new Intl.DateTimeFormat('de-AT',{day:'2-digit',month:'2-digit'});function mondayKey(date=new Date()){const d=new Date(date);d.setHours(0,0,0,0);const day=d.getDay();const diff=day===0?-6:1-day;d.setDate(d.getDate()+diff);return d.toISOString().slice(0,10)}function weekEndFromKey(key){const d=new Date(key+'T00:00:00');d.setDate(d.getDate()+6);return d}function load(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return{limit:DEFAULT_LIMIT,currentWeek:mondayKey(),weeks:{}};const data=JSON.parse(raw);data.limit=Number(data.limit)||DEFAULT_LIMIT;data.weeks||={};data.currentWeek=mondayKey();data.weeks[data.currentWeek]||=[];return data}catch{return{limit:DEFAULT_LIMIT,currentWeek:mondayKey(),weeks:{}}}}let state=load();state.weeks[state.currentWeek]||=[];save();function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}function parseMoney(value){if(!value)return NaN;return Number(String(value).replace(/\s/g,'').replace(',','.'))}function addExpense(amount,note=''){const value=Number(amount);if(!Number.isFinite(value)||value<=0)return;const item={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random()),amount:Math.round(value*100)/100,note:note.trim(),createdAt:new Date().toISOString()};state.currentWeek=mondayKey();state.weeks[state.currentWeek]||=[];state.weeks[state.currentWeek].push(item);save();render()}function deleteExpense(id){const week=state.weeks[state.currentWeek]||[];const idx=week.findIndex(x=>x.id===id);if(idx>=0){lastDeleted=week.splice(idx,1)[0];save();render()}}function render(){state.currentWeek=mondayKey();state.weeks[state.currentWeek]||=[];const week=state.weeks[state.currentWeek];const total=week.reduce((sum,x)=>sum+Number(x.amount||0),0);const left=state.limit-total;const percent=state.limit>0?Math.min(100,Math.max(0,total/state.limit*100)):100;const start=new Date(state.currentWeek+'T00:00:00');const end=weekEndFromKey(state.currentWeek);$('weekRange').textContent=`${dateFmt.format(start)} – ${dateFmt.format(end)}`;$('spent').textContent=fmt.format(total);$('left').innerHTML=left>=0?`Noch ${fmt.format(left)} von ${fmt.format(state.limit)} übrig`:`<span class="over">${fmt.format(Math.abs(left))} über Limit</span> · Limit ${fmt.format(state.limit)}`;$('barFill').style.width=`${percent}%`;$('limit').value=String(state.limit).replace('.',',');const list=$('list');list.innerHTML='';$('empty').style.display=week.length?'none':'block';[...week].reverse().forEach(item=>{const li=document.createElement('li');const info=document.createElement('div');const title=document.createElement('div');title.className='item-title';title.textContent=item.note||'Ausgabe';const meta=document.createElement('div');meta.className='item-meta';const t=new Date(item.createdAt);meta.textContent=`${dateFmt.format(t)} · ${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;info.append(title,meta);const amount=document.createElement('div');amount.className='amount';amount.textContent=fmt.format(item.amount);const del=document.createElement('button');del.className='delete';del.textContent='×';del.setAttribute('aria-label','Ausgabe löschen');del.onclick=()=>deleteExpense(item.id);li.append(info,amount,del);list.appendChild(li)})}$('addBtn').onclick=()=>{const value=parseMoney($('amount').value);addExpense(value,$('note').value);$('amount').value='';$('note').value='';$('amount').focus()};$('amount').addEventListener('keydown',e=>{if(e.key==='Enter')$('addBtn').click()});$('note').addEventListener('keydown',e=>{if(e.key==='Enter')$('addBtn').click()});document.querySelectorAll('.quickBtn').forEach(btn=>{btn.onclick=()=>addExpense(Number(btn.dataset.val),'Quick add')});$('saveLimitBtn').onclick=()=>{const value=parseMoney($('limit').value);if(Number.isFinite(value)&&value>0){state.limit=Math.round(value*100)/100;save();render()}};$('resetBtn').onclick=()=>{if(confirm('Diese Woche wirklich leeren?')){state.weeks[state.currentWeek]=[];lastDeleted=null;save();render()}};$('undoBtn').onclick=()=>{if(lastDeleted){state.weeks[state.currentWeek].push(lastDeleted);lastDeleted=null;save();render()}};window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('installBtn').classList.add('show')});$('installBtn').onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$('installBtn').classList.remove('show')};if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'))}render();
+const STORAGE_KEY = 'weekly-budget-v1';
+const DEFAULT_LIMIT = 150;
+const LOCALE = 'en-GB';
+const CURRENCY = 'EUR';
+
+let deferredPrompt = null;
+let lastDeleted = null;
+const expandedMonths = new Set();
+
+const $ = id => document.getElementById(id);
+const fmt = new Intl.NumberFormat(LOCALE, { style: 'currency', currency: CURRENCY });
+const dateFmt = new Intl.DateTimeFormat(LOCALE, { day: '2-digit', month: '2-digit' });
+const monthFmt = new Intl.DateTimeFormat(LOCALE, { month: 'long', year: 'numeric' });
+
+function mondayKey(date = new Date()) {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  const day = d.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  return dateKey(d);
+}
+
+function dateKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function weekEndFromKey(key) {
+  const d = new Date(key + 'T00:00:00');
+  d.setDate(d.getDate() + 6);
+  return d;
+}
+
+function normalizeStoredWeekKey(key) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(key)) return key;
+  const d = new Date(key + 'T00:00:00');
+  if (d.getDay() === 0) {
+    d.setDate(d.getDate() + 1);
+    return dateKey(d);
+  }
+  return key;
+}
+
+function fallbackState() {
+  const currentWeek = mondayKey();
+  return {
+    limit: DEFAULT_LIMIT,
+    currentWeek,
+    weeks: { [currentWeek]: [] },
+    weekLimits: { [currentWeek]: DEFAULT_LIMIT }
+  };
+}
+
+function normalizeState(data) {
+  const state = data && typeof data === 'object' ? data : fallbackState();
+  const storedLimit = Number(state.limit);
+  state.limit = Number.isFinite(storedLimit) && storedLimit > 0 ? Math.round(storedLimit * 100) / 100 : DEFAULT_LIMIT;
+  state.weeks = state.weeks && typeof state.weeks === 'object' ? state.weeks : {};
+  state.weekLimits = state.weekLimits && typeof state.weekLimits === 'object' ? state.weekLimits : {};
+
+  const migratedWeeks = {};
+  const migratedLimits = {};
+  const knownKeys = new Set([...Object.keys(state.weeks), ...Object.keys(state.weekLimits)]);
+
+  knownKeys.forEach(key => {
+    const normalizedKey = normalizeStoredWeekKey(key);
+    const week = Array.isArray(state.weeks[key]) ? state.weeks[key] : [];
+    const weekLimit = Number(state.weekLimits[key]);
+    if (!Array.isArray(migratedWeeks[normalizedKey])) migratedWeeks[normalizedKey] = [];
+    migratedWeeks[normalizedKey].push(...week);
+    if (!Number.isFinite(Number(migratedLimits[normalizedKey])) || Number(migratedLimits[normalizedKey]) <= 0) {
+      migratedLimits[normalizedKey] = Number.isFinite(weekLimit) && weekLimit > 0 ? weekLimit : state.limit;
+    }
+  });
+
+  state.weeks = migratedWeeks;
+  state.weekLimits = migratedLimits;
+
+  state.currentWeek = mondayKey();
+  if (!Array.isArray(state.weeks[state.currentWeek])) state.weeks[state.currentWeek] = [];
+  if (!Number.isFinite(Number(state.weekLimits[state.currentWeek])) || Number(state.weekLimits[state.currentWeek]) <= 0) {
+    state.weekLimits[state.currentWeek] = state.limit;
+  }
+
+  return state;
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? normalizeState(JSON.parse(raw)) : fallbackState();
+  } catch {
+    return fallbackState();
+  }
+}
+
+let state = load();
+save();
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function parseMoney(value) {
+  if (!value) return NaN;
+  return Number(String(value).replace(/\s/g, '').replace(',', '.'));
+}
+
+function ensureCurrentWeek() {
+  state.currentWeek = mondayKey();
+  if (!Array.isArray(state.weeks[state.currentWeek])) state.weeks[state.currentWeek] = [];
+  if (!Number.isFinite(Number(state.weekLimits[state.currentWeek])) || Number(state.weekLimits[state.currentWeek]) <= 0) {
+    state.weekLimits[state.currentWeek] = state.limit;
+  }
+}
+
+function getWeekLimit(key) {
+  const value = Number(state.weekLimits && state.weekLimits[key]);
+  return Number.isFinite(value) && value > 0 ? value : state.limit;
+}
+
+function getWeekTotal(key) {
+  const week = Array.isArray(state.weeks[key]) ? state.weeks[key] : [];
+  return week.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+}
+
+function addExpense(amount, note = '') {
+  const value = Number(amount);
+  if (!Number.isFinite(value) || value <= 0) return;
+  ensureCurrentWeek();
+  const item = {
+    id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+    amount: Math.round(value * 100) / 100,
+    note: note.trim(),
+    createdAt: new Date().toISOString()
+  };
+  state.weeks[state.currentWeek].push(item);
+  save();
+  render();
+}
+
+function deleteExpense(id) {
+  ensureCurrentWeek();
+  const week = state.weeks[state.currentWeek] || [];
+  const idx = week.findIndex(item => item.id === id);
+  if (idx >= 0) {
+    lastDeleted = week.splice(idx, 1)[0];
+    save();
+    render();
+  }
+}
+
+function setView(viewId) {
+  document.querySelectorAll('.view').forEach(view => {
+    view.hidden = view.id !== viewId;
+  });
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.view === viewId);
+  });
+}
+
+function formatMargin(delta) {
+  return {
+    value: `${delta >= 0 ? '+' : '-'}${fmt.format(Math.abs(delta))}`,
+    className: delta >= 0 ? 'good' : 'bad'
+  };
+}
+
+function monthKeyFromWeek(key) {
+  const d = new Date(key + 'T00:00:00');
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function buildHistory() {
+  const keys = new Set(Object.keys(state.weeks || {}));
+  keys.add(state.currentWeek);
+  const months = new Map();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  [...keys].forEach(key => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(key)) return;
+    const items = Array.isArray(state.weeks[key]) ? state.weeks[key] : [];
+    const hasLimitSnapshot = Boolean(state.weekLimits && Object.prototype.hasOwnProperty.call(state.weekLimits, key));
+    const end = weekEndFromKey(key);
+    const isFinishedWeek = end < today;
+    if (!items.length && (!hasLimitSnapshot || !isFinishedWeek)) return;
+
+    const monthKey = monthKeyFromWeek(key);
+    const start = new Date(key + 'T00:00:00');
+    const limit = getWeekLimit(key);
+    const spent = getWeekTotal(key);
+    const week = {
+      key,
+      start,
+      end,
+      limit,
+      spent,
+      delta: limit - spent
+    };
+
+    if (!months.has(monthKey)) {
+      months.set(monthKey, {
+        key: monthKey,
+        date: new Date(start.getFullYear(), start.getMonth(), 1),
+        limit: 0,
+        spent: 0,
+        delta: 0,
+        weeks: []
+      });
+    }
+
+    const month = months.get(monthKey);
+    month.limit += limit;
+    month.spent += spent;
+    month.delta += week.delta;
+    month.weeks.push(week);
+  });
+
+  return [...months.values()]
+    .sort((a, b) => b.key.localeCompare(a.key))
+    .map(month => {
+      month.weeks.sort((a, b) => b.key.localeCompare(a.key));
+      return month;
+    });
+}
+
+function renderWeek() {
+  ensureCurrentWeek();
+  const week = state.weeks[state.currentWeek];
+  const total = getWeekTotal(state.currentWeek);
+  const limit = getWeekLimit(state.currentWeek);
+  const left = limit - total;
+  const percent = limit > 0 ? Math.min(100, Math.max(0, total / limit * 100)) : 100;
+  const start = new Date(state.currentWeek + 'T00:00:00');
+  const end = weekEndFromKey(state.currentWeek);
+
+  $('weekRange').textContent = `${dateFmt.format(start)} - ${dateFmt.format(end)}`;
+  $('spent').textContent = fmt.format(total);
+  $('left').innerHTML = left >= 0
+    ? `<span class="good">${fmt.format(left)}</span> left from ${fmt.format(limit)}`
+    : `<span class="bad">${fmt.format(Math.abs(left))}</span> over limit - limit ${fmt.format(limit)}`;
+  $('barFill').style.width = `${percent}%`;
+  $('limit').value = String(limit);
+  $('settingsSaved').textContent = `Current limit: ${fmt.format(limit)}`;
+
+  const list = $('list');
+  list.innerHTML = '';
+  $('empty').style.display = week.length ? 'none' : 'block';
+
+  [...week].reverse().forEach(item => {
+    const li = document.createElement('li');
+    const info = document.createElement('div');
+    const title = document.createElement('div');
+    title.className = 'item-title';
+    title.textContent = item.note || 'Expense';
+    const meta = document.createElement('div');
+    meta.className = 'item-meta';
+    const t = new Date(item.createdAt);
+    meta.textContent = `${dateFmt.format(t)} - ${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}`;
+    info.append(title, meta);
+
+    const amount = document.createElement('div');
+    amount.className = 'amount';
+    amount.textContent = fmt.format(item.amount);
+
+    const del = document.createElement('button');
+    del.className = 'delete';
+    del.type = 'button';
+    del.textContent = 'x';
+    del.setAttribute('aria-label', 'Delete expense');
+    del.onclick = () => deleteExpense(item.id);
+
+    li.append(info, amount, del);
+    list.appendChild(li);
+  });
+}
+
+function renderHistory() {
+  const months = buildHistory();
+  const savedTotal = months.reduce((sum, month) => sum + Math.max(0, month.delta), 0);
+  const overTotal = months.reduce((sum, month) => sum + Math.max(0, -month.delta), 0);
+  const monthList = $('monthList');
+
+  $('historySaved').textContent = fmt.format(savedTotal);
+  $('historyOver').textContent = fmt.format(overTotal);
+  $('historySaved').className = savedTotal > 0 ? 'stat-value good' : 'stat-value';
+  $('historyOver').className = overTotal > 0 ? 'stat-value bad' : 'stat-value';
+  $('historyEmpty').style.display = months.length ? 'none' : 'block';
+  monthList.innerHTML = '';
+
+  months.forEach(month => {
+    const delta = formatMargin(month.delta);
+    const isExpanded = expandedMonths.has(month.key);
+    const card = document.createElement('section');
+    card.className = 'month-card';
+
+    const head = document.createElement('button');
+    head.className = 'month-toggle';
+    head.type = 'button';
+    head.setAttribute('aria-expanded', String(isExpanded));
+    head.setAttribute('aria-controls', `month-weeks-${month.key}`);
+    head.onclick = () => {
+      if (expandedMonths.has(month.key)) expandedMonths.delete(month.key);
+      else expandedMonths.add(month.key);
+      renderHistory();
+    };
+
+    const titleWrap = document.createElement('div');
+    const title = document.createElement('div');
+    title.className = 'month-title';
+    title.textContent = monthFmt.format(month.date);
+    const meta = document.createElement('div');
+    meta.className = 'month-meta';
+    meta.textContent = `${fmt.format(month.spent)} spent from ${fmt.format(month.limit)} limit`;
+    titleWrap.append(title, meta);
+
+    const amount = document.createElement('div');
+    amount.className = `month-delta ${delta.className}`;
+    const amountLabel = document.createElement('span');
+    amountLabel.textContent = 'Margin';
+    const amountValue = document.createElement('strong');
+    amountValue.textContent = delta.value;
+    amount.append(amountLabel, amountValue);
+
+    const icon = document.createElement('div');
+    icon.className = 'month-icon';
+    icon.textContent = isExpanded ? '-' : '+';
+
+    head.append(titleWrap, amount, icon);
+    card.appendChild(head);
+
+    const weeks = document.createElement('div');
+    weeks.className = 'month-weeks';
+    weeks.id = `month-weeks-${month.key}`;
+    weeks.hidden = !isExpanded;
+
+    month.weeks.forEach(week => {
+      const weekDelta = formatMargin(week.delta);
+      const row = document.createElement('div');
+      row.className = 'week-row';
+      const label = document.createElement('div');
+      const range = document.createElement('strong');
+      range.textContent = `${dateFmt.format(week.start)} - ${dateFmt.format(week.end)}`;
+      const details = document.createElement('div');
+      details.textContent = `${fmt.format(week.spent)} spent of ${fmt.format(week.limit)}`;
+      label.append(range, details);
+
+      const value = document.createElement('div');
+      value.className = `week-margin ${weekDelta.className}`;
+      const valueLabel = document.createElement('span');
+      valueLabel.textContent = 'Margin';
+      const valueAmount = document.createElement('strong');
+      valueAmount.textContent = weekDelta.value;
+      value.append(valueLabel, valueAmount);
+
+      row.append(label, value);
+      weeks.appendChild(row);
+    });
+
+    card.appendChild(weeks);
+    monthList.appendChild(card);
+  });
+}
+
+function render() {
+  renderWeek();
+  renderHistory();
+  save();
+}
+
+$('addBtn').onclick = () => {
+  const value = parseMoney($('amount').value);
+  addExpense(value, $('note').value);
+  $('amount').value = '';
+  $('note').value = '';
+  $('amount').focus();
+};
+
+$('amount').addEventListener('keydown', event => {
+  if (event.key === 'Enter') $('addBtn').click();
+});
+
+$('note').addEventListener('keydown', event => {
+  if (event.key === 'Enter') $('addBtn').click();
+});
+
+document.querySelectorAll('.quickBtn').forEach(btn => {
+  btn.onclick = () => addExpense(Number(btn.dataset.val), 'Quick add');
+});
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.onclick = () => setView(tab.dataset.view);
+});
+
+$('saveLimitBtn').onclick = () => {
+  const value = parseMoney($('limit').value);
+  if (Number.isFinite(value) && value > 0) {
+    state.limit = Math.round(value * 100) / 100;
+    ensureCurrentWeek();
+    state.weekLimits[state.currentWeek] = state.limit;
+    save();
+    render();
+  }
+};
+
+$('resetBtn').onclick = () => {
+  if (confirm('Clear this week?')) {
+    ensureCurrentWeek();
+    state.weeks[state.currentWeek] = [];
+    lastDeleted = null;
+    save();
+    render();
+  }
+};
+
+$('undoBtn').onclick = () => {
+  if (lastDeleted) {
+    ensureCurrentWeek();
+    state.weeks[state.currentWeek].push(lastDeleted);
+    lastDeleted = null;
+    save();
+    render();
+  }
+};
+
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  deferredPrompt = event;
+  $('installBtn').classList.add('show');
+});
+
+$('installBtn').onclick = async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  $('installBtn').classList.remove('show');
+};
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+}
+
+render();
 </script>
 </body>
 </html>
